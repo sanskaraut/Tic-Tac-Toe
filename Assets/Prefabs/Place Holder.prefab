@@ -118,5 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117488aefcbf9fc49af4398a3bde6a3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cross: {fileID: 9177134016697300387, guid: d6059754bc8434b4f8bf444bd8a17881, type: 3}
-  circle: {fileID: 2491422490313983090, guid: a79976f278a951c40a454d04f9ae572d, type: 3}
+  crossPrefab: {fileID: 0}
+  circlePrefab: {fileID: 0}
+  i: 0
+  j: 0

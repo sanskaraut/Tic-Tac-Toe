@@ -5,9 +5,12 @@ using UnityEngine;
 public class BoxClick : MonoBehaviour
 {
     private GameManager gameManager; // Reference to the GameManager script
-    public GameObject cross;         // Cross prefab
-    public GameObject circle;        // Circle prefab
+    public GameObject crossPrefab;   // Cross prefab
+    public GameObject circlePrefab;  // Circle prefab
     public int i, j;                 // Grid indices for this box
+
+
+    private bool isClicked = false;  // Tracks if the box has already been clicked
 
     void Start()
     {
@@ -18,33 +21,36 @@ public class BoxClick : MonoBehaviour
         }
     }
 
-    void OnMouseDown() // Triggered when the object is clicked
+    
+
+
+    public void HandleInteraction()
     {
-        if (gameManager.gameOn)
+        if (isClicked || gameManager == null || !gameManager.gameOn) return;
+
+        // Determine whether to place a cross or circle
+        if (gameManager.steps % 2 == 0)
         {
-            if (gameManager == null) return;
+            Instantiate(crossPrefab, new Vector3(transform.position.x,transform.position.y,transform.position.z-1), Quaternion.identity);
+            gameManager.playingChance.SetText("O Should Play");
+            gameManager.completed[i, j] = 1; // Mark grid as occupied by X
+        }
+        else
+        {
+            Instantiate(circlePrefab, new Vector3(transform.position.x,transform.position.y,transform.position.z-1), Quaternion.identity);
+            gameManager.playingChance.SetText("X Should Play");
+            gameManager.completed[i, j] = 2; // Mark grid as occupied by O
+        }
 
-            if (gameManager.steps % 2 == 0)
-            {
-                Instantiate(cross, this.transform.position, transform.rotation);
-                gameManager.playingChance.SetText("O Should Play");
-                gameManager.completed[i, j] = 1; // Set value to 1 for cross
-            }
-            else
-            {
-                Instantiate(circle, this.transform.position, transform.rotation);
-                gameManager.playingChance.SetText("X Should Play");
-                gameManager.completed[i, j] = 2; // Set value to 2 for circle
-            }
+        isClicked = true; // Mark the box as clicked to make it non-interactable
+        gameManager.steps++;
+        gameManager.CheckIfGameCompleted();
 
-            Destroy(gameObject); // Destroy the box after placing cross or circle
-            gameManager.steps++;
-            gameManager.CheckIfGameCompleted();
-            // Optional: Reset game if all steps are completed
-            if (gameManager.steps >= 9)
-            {
-                gameManager.ResetGameScene();
-            }
+        if (gameManager.steps >= 9)
+        {
+            gameManager.ResetGameScene();
         }
     }
+
+
 }
